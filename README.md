@@ -1,32 +1,64 @@
-# IngeInv — Gestión Inteligente de Mantenimiento Industrial
+# IngeInv — Plataforma de Gestión Inteligente de Mantenimiento Industrial
 
-**IngeInv** es una plataforma de software orientada a la **gestión y predicción de fallos** en maquinaria industrial. Su objetivo es automatizar completamente la planificación de mantenimientos, optimizar costos operativos y brindar asistencia inteligente a ingenieros y técnicos de producción.
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Android-Kotlin%20%7C%20Jetpack%20Compose-7F52FF?logo=kotlin&logoColor=white)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
+![License](https://img.shields.io/badge/Licencia-MIT-green)
 
----
-
-## 🚀 Características principales
-
-| Módulo | Descripción |
-|---|---|
-| **Gestión de máquinas** | Registro de máquinas, componentes y su estado operativo |
-| **Lecturas de sensores** | Ingesta y almacenamiento de telemetría en tiempo real |
-| **Predicción de fallos** | Modelo de ML (scikit-learn) que estima la probabilidad de fallo |
-| **Planificación de mantenimiento** | Generación automática de órdenes de trabajo preventivas y correctivas |
-| **API REST** | Interfaz FastAPI documentada con Swagger UI |
+**IngeInv** es un ecosistema de herramientas para **ingeniería industrial** que combina una API REST, una aplicación de escritorio, una app Android y análisis inteligente de formas técnicas. Su objetivo es centralizar la gestión de maquinaria, automatizar el mantenimiento y dar soporte a ingenieros y técnicos de producción.
 
 ---
 
-## 🏗️ Arquitectura
+## 📦 Componentes del proyecto
+
+| Componente | Archivo / Carpeta | Tecnología | Descripción |
+|---|---|---|---|
+| **API REST** | `src/ingeinv/` | Python · FastAPI · SQLAlchemy | Backend con endpoints para máquinas, mantenimiento y predicción de fallos |
+| **App de Escritorio** | `Ingenieria.py` | Python · Tkinter / CustomTkinter | Interfaz gráfica completa: máquinas, componentes, calibraciones, planos y más |
+| **App Android** | `IngenieriaScreen.kt` | Kotlin · Jetpack Compose | Pantalla principal del ingeniero con acceso a todos los módulos desde el móvil |
+| **Análisis de Formas (ML/CV)** | `contour_fourier.py` | Python · OpenCV · NumPy | Extrae contornos de imágenes o PDF y los representa como serie de Fourier |
+
+---
+
+## 🚀 Funcionalidades principales
+
+### 🔧 Gestión industrial (API + Desktop + Android)
+- Registro de **máquinas**, componentes y estado operativo
+- Gestión de **personal** técnico y operarios
+- **Cronogramas de mantenimiento** preventivos y correctivos
+- **Lecturas de sensores** y telemetría en tiempo real
+- **Predicción de fallos** con modelo de Machine Learning (scikit-learn)
+- **Asistente AaaS** con recomendaciones en tiempo real
+
+### 🛠️ Herramientas especializadas (Android)
+- **Calculadora Solar** — dimensionamiento de sistemas fotovoltaicos
+- **Compilador LaTeX** — editor y visualizador de documentos técnicos
+- **Planos y Datos Espaciales** — dibujo de planos y mapas con sensores
+
+### 📐 Análisis de contornos (ML/CV)
+- Extrae el contorno principal de cualquier imagen PNG/JPG o PDF técnico
+- Calcula la **Serie de Fourier** del contorno como señal compleja `x + i·y`
+- Exporta coeficientes a JSON para usar en modelos de clasificación o reconstrucción
+- Genera imagen comparativa (original vs. reconstruida)
+
+---
+
+## 🏗️ Estructura del proyecto
 
 ```
 IngeInv/
-├── src/ingeinv/
-│   ├── main.py          # Punto de entrada FastAPI
-│   ├── database.py      # Configuración SQLAlchemy
-│   ├── models/          # Modelos ORM (Machine, Component, SensorReading, …)
-│   ├── services/        # Lógica de negocio (MachineService, PredictionService, …)
-│   └── routers/         # Endpoints REST
-└── tests/               # Tests con pytest
+├── src/ingeinv/            # API REST (FastAPI)
+│   ├── main.py             # Punto de entrada
+│   ├── database.py         # Configuración SQLAlchemy
+│   ├── models/             # Modelos ORM (Machine, Component, SensorReading, …)
+│   ├── services/           # Lógica de negocio (MachineService, PredictionService, …)
+│   └── routers/            # Endpoints REST (machines, maintenance, predictions)
+├── tests/                  # Tests con pytest
+├── Ingenieria.py           # App de escritorio (Tkinter/CustomTkinter)
+├── IngenieriaScreen.kt     # Pantalla principal Android (Jetpack Compose)
+├── contour_fourier.py      # Herramienta ML/CV: contornos → Fourier
+├── requirements.txt        # Dependencias Python
+└── pyproject.toml          # Configuración del paquete
 ```
 
 ---
@@ -37,13 +69,41 @@ IngeInv/
 pip install -r requirements.txt
 ```
 
+Para usar la herramienta de análisis de contornos, instala también:
+
+```bash
+pip install opencv-python matplotlib PyMuPDF
+```
+
+---
+
 ## ▶️ Ejecución
+
+### API REST
 
 ```bash
 uvicorn src.ingeinv.main:app --reload
 ```
 
-Navega a `http://localhost:8000/docs` para la documentación interactiva.
+Navega a `http://localhost:8000/docs` para la documentación interactiva (Swagger UI).
+
+### App de Escritorio
+
+```bash
+python Ingenieria.py
+```
+
+### Análisis de Contornos / Fourier
+
+```bash
+# Desde una imagen PNG o JPG
+python contour_fourier.py --input plano.png --output coeficientes.json --plot reconstruccion.png
+
+# Desde un PDF técnico
+python contour_fourier.py --input manual.pdf --output coeficientes.json --terms 150
+```
+
+---
 
 ## 🧪 Tests
 
